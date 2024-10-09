@@ -1,6 +1,6 @@
 <h1>The Great American Coffee Taste Test ☕️</h1>
 
- ### [YouTube Demonstration](https://youtu.be/7eJexJVCqJo)
+ ### [YouTube live stream by by coffee expert James Hoffmann and Cometeer](https://www.youtube.com/live/U489K2t_Tgc?si=CajoKH46J_UEba48)
 
 <h2>Description</h2>
 <p>This project aims to analyze consumer preferences for specialty coffee and identify the key factors that influence coffee quality. Using datasets that capture taster preferences, coffee characteristics, and expert evaluations, the goal is to develop personalized recommendation models and address the following research questions:</p>
