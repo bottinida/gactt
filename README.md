@@ -1,4 +1,4 @@
-<h1>The Great American Coffee Taste Test</h1>
+<h1>The Great American Coffee Taste Test ☕️</h1>
 
  ### [YouTube Demonstration](https://youtu.be/7eJexJVCqJo)
 
