@@ -1,11 +1,15 @@
-<h1>JWipe - Disk Sanitization</h1>
+<h1>The Great American Coffee Taste Test</h1>
 
  ### [YouTube Demonstration](https://youtu.be/7eJexJVCqJo)
 
 <h2>Description</h2>
-Project consists of a simple PowerShell script that walks the user through "zeroing out" (wiping) any drives that are connected to the system. The utility allows you to select the target disk and choose the number of passes that are performed. The PowerShell script will configure a diskpart script file based on the user's selections and then launch Diskpart to perform the disk sanitization.
-<br />
+<p>This project aims to analyze consumer preferences for specialty coffee and identify the key factors that influence coffee quality. Using datasets that capture taster preferences, coffee characteristics, and expert evaluations, the goal is to develop personalized recommendation models and address the following research questions:</p>
 
+<ol>
+    <li>What sensory attributes, determined through the cupping process, have the most significant impact on overall coffee quality?</li>
+    <li>Can the taster preference be predicted based on the amount of money spent on coffee and coffee equipment?</li>
+    <li>How do preferences for specialty coffee differ between age groups in terms of consumption frequency, taste, roasting preferences, average monthly spending, and other coffee-related habits?</li>
+</ol>
 
 <h2>Languages and Utilities Used</h2>
 
@@ -46,6 +50,10 @@ Sanitization complete:  <br/>
 Observe the wiped disk:  <br/>
 <img src="https://i.imgur.com/AeZkvFQ.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
 </p>
+
+<h2>Visual Insights</h2>
+
+### [Project Presentation for Stakeholders](https://www.canva.com/design/DAGApdlVzAU/tG1TiQqygrWzrr42a8Sm9g/view?utm_content=DAGApdlVzAU&utm_campaign=designshare&utm_medium=link&utm_source=editor)
 
 <!--
  ```diff
