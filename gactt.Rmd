@@ -1,0 +1,281 @@
+---
+title: "GACTT"
+output: html_document
+date: "2024-03-30"
+---
+
+```{r setup, include=FALSE}
+# Set global chunk options
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load necessary libraries for data analysis
+library(readxl)
+library(randomForest)
+library(ggplot2)
+library(cowplot)
+library(tidyverse)
+library(class)
+library(nnet)
+library(gbm)
+library(corrplot)
+library(car)
+library(glmnet)
+
+# Set seed for reproducibility
+set.seed(7606)
+
+# Load datasets from Excel files
+merged_xlsx <- read_excel("merged_coffee.xlsx")
+gactt_xlsx <- read_excel("CleanGACTT.xlsx")
+
+# Select relevant columns for coffee quality analysis
+merged_focus <- merged_xlsx %>% select(c("Species","Aroma","Flavor","Aftertaste","Acidity","Body","Balance","Uniformity","Clean.Cup","Sweetness","Total.Cup.Points"))
+
+# Convert 'Species' to factor and remove rows with missing values
+merged_focus$Species <- as.factor(merged_focus$Species)
+merged_focus <- na.omit(merged_focus)
+
+# Separate numeric variables and predictors
+mf_numeric <- merged_focus %>% select(-c("Species"))
+mf_predictors <- mf_numeric %>% select(-c("Total.Cup.Points"))
+
+# Display structure of the dataframe
+str(merged_focus)
+
+# Count observations by coffee species
+species_df <- merged_focus %>% group_by(Species) %>% summarise(counts = n())
+
+# Plot distribution of coffee species
+ggplot(species_df, aes(x = Species, y = counts)) +
+  geom_bar(fill = "#0073C2FF", stat = "identity") +
+  geom_text(aes(label = counts), vjust = -0.3) +
+  labs(x = "Species", y = "Frequency", title = "Coffee Species Distribution")
+
+# Boxplots for numeric variables 
+boxplot(mf_numeric)
+
+# Function to plot histograms for all numeric columns
+plot_histograms <- function(data) {
+  col_names <- names(data)
+  
+  for (col in col_names) {
+    print(
+      ggplot(data, aes(x = .data[[col]])) +
+        geom_histogram(color = "black", fill = "white") +
+        labs(x = col, y = "Frequency", title = paste("Histogram of", col))
+    )
+  }
+}
+
+# Generate histograms for selected numeric variables
+plot_histograms(mf_numeric)
+
+
+# Generate scatter plots between each predictor and 'Total.Cup.Points'
+mf_columns <- names(mf_numeric)
+
+for (col in mf_columns){
+  plot(mf_numeric[[col]], mf_numeric$Total.Cup.Points,
+       xlab = col, ylab = "Total Cup Points",
+       main = paste("Scatter Plot:", col, "vs Total Cup Points"))
+}
+
+
+# ====================================
+# ###### Question 1 ######
+# ====================================
+
+####### Analysis Correlation
+
+# Calculate and plot correlation matrix
+cor_max <- cor(mf_numeric)
+print(cor_max)
+corrplot(cor_max, type = "lower")
+
+
+# Function to convert categorical variables to dummy variables
+convert_to_dummies <- function(data) {
+  factor_vars <- sapply(data, is.factor)
+  dummy_vars <- model.matrix(~ . - 1, data = data[, factor_vars])
+  data <- cbind(data[, !factor_vars, drop = FALSE], dummy_vars)
+  return(data)
+}
+
+# Apply conversion and remove redundant variable
+final_merged <- convert_to_dummies(merged_focus)
+final_merged <- final_merged %>% select(-c("SpeciesRobusta"))
+
+######## MLR
+
+# Fit a multiple linear regression model
+first_model <- lm(Total.Cup.Points ~ ., data = final_merged)
+
+# Display model summary and check for multicollinearity
+summary(first_model)
+vif(first_model)
+
+######## Stepwise
+
+# Perform stepwise variable selection
+step_model <- step(first_model, direction = "both")
+summary(step_model)
+
+######## Lasso
+
+# Prepare variables for Lasso regression
+y <- final_merged$Total.Cup.Points
+x <- data.matrix(mf_predictors)
+
+# Perform cross-validation to find optimal lambda
+cv_lasso <- cv.glmnet(x, y, alpha = 1)
+best_lambda <- cv_lasso$lambda.min
+print(best_lambda)
+plot(cv_lasso)
+
+# Fit Lasso model with optimal lambda and display coefficients
+best_lasso <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+print(coef(best_lasso))
+
+######## Ridge Regression
+
+# Perform cross-validation to find optimal lambda for Ridge
+cv_ridge <- cv.glmnet(x, y, alpha = 0)
+best_lambda_r <- cv_ridge$lambda.min
+print(best_lambda_r)
+plot(cv_ridge)
+
+# Fit Ridge model with optimal lambda and display coefficients
+best_model_ridge <- glmnet(x, y, alpha = 0, lambda = best_lambda_r)
+print(coef(best_model_ridge))
+
+##########  Models Evaluation via Cross Validation
+
+# Code for model evaluation using cross-validation 
+# ds_length <- dim(final_merged)[1]
+# B = 100
+# TEALL = NULL
+# for (b in 1:B){
+#   flag <- sort(sample(ds_length, ds_length * 0.3, replace = FALSE)) 
+#   merged_train <- final_merged[-flag,]
+#   merged_traind_preds <- merged_train %>% select(-c("Total.Cup.Points"))
+#   
+#   merged_test <- final_merged[flag,]
+#   merged_test_result <- merged_test$Total.Cup.Points
+#   merged_test <- merged_test %>% select(-c("Total.Cup.Points"))
+#  
+#   # Fit simple MLR
+#   mlr_model <- lm(Total.Cup.Points ~ ., data = merged_train)
+#   mlr_predict <- round(predict.lm(mlr_model, merged_test), 2)
+#   te0 <- mean(mlr_predict != merged_test_result)
+#   summary(mlr_model)
+#   head(mlr_predict)
+#   head(merged_test_result)
+#   
+#   # Fit stepwise MLR
+#   step_model <- step(mlr_model, direction = "both")
+#   step_predict <- predict.lm(step_model, merged_test)
+#   te1 <- mean(step_predict != merged_test_result)
+#   
+#   # Fit Lasso
+#   y <- merged_train$Total.Cup.Points
+#   x <- data.matrix(merged_traind_preds)
+#   
+#   cv_lasso <- cv.glmnet(x, y, alpha = 1)
+#   best_lambda_l <- cv_lasso$lambda.min
+#   bm_lasso <- glmnet(x, y, alpha = 1, lambda = best_lambda_l)
+#   
+#   lasso_predict <- predict(bm_lasso, s = best_lambda_l, newx = data.matrix(merged_test))
+#   te2 <- mean(lasso_predict != merged_test_result)
+#   
+#   # Fit Ridge
+#   cv_ridge <- cv.glmnet(x, y, alpha = 0)
+#   best_lambda_r <- cv_ridge$lambda.min
+#   bm_ridge <- glmnet(x, y, alpha = 1, lambda = best_lambda_r)
+#   ridge_predict <- predict(bm_ridge, s = best_lambda_r, newx = data.matrix(merged_test))
+#   te3 <- mean(ridge_predict != merged_test_result)
+# }
+# 
+# TEALL = rbind(TEALL, cbind(te0, te1, te2, te3))
+# dim(TEALL)
+# apply(TEALL, 2, mean)
+# apply(TEALL, 2, var)
+
+
+# ====================================
+# ###### Question 2 ######
+# ====================================
+
+##########  Data Cleaning
+
+# Remove unnecessary columns and convert variables to factors
+gactt <- gactt_xlsx[, -c(59:60)]
+
+gactt$Age <- as.factor(gactt$Age)
+gactt$DailyCups <- as.factor(gactt$DailyCups)
+
+# Identify and convert character and logical columns to factors
+char_columns <- colnames(gactt[, sapply(gactt, is.character)])
+logi_columns <- colnames(gactt[, sapply(gactt, is.logical)])
+
+for (col in char_columns){
+  gactt[[col]] <- as.factor(gactt[[col]])
+}
+
+for (col in logi_columns){
+  gactt[[col]] <- as.factor(gactt[[col]])
+}
+
+# Split data into training and testing sets
+ds_length <- dim(gactt)[1]
+flag <- sort(sample(ds_length, ds_length * 0.3, replace = FALSE)) 
+gactt_train <- gactt[-flag,]
+gactt_test <- gactt[flag,]
+
+# Separate labels and features
+labels_train <- gactt_train$OverallFavCoffee
+labels_test <- gactt_test$OverallFavCoffee
+train_data_feats <- gactt_train %>% select(-OverallFavCoffee)
+gactt_test_model <- gactt_test %>% select(-OverallFavCoffee)
+
+
+##########  Random Forest
+
+# Find the best 'mtry' value using Out-Of-Bag (OOB) error
+oob_values <- vector(length = 20)
+
+for (i in 1:20){
+  temp.model <- randomForest(OverallFavCoffee ~ ., data = gactt_train,
+                             ntree = 1000, mtry = i)
+  oob_values[i] <- temp.model$err.rate[nrow(temp.model$err.rate), 1]
+}
+
+# Identify the 'mtry' with the lowest OOB error
+best_mtry <- which.min(oob_values)
+print(min(oob_values))
+print(best_mtry)
+
+# Display model summary and OOB errors
+summary(temp.model)
+print(oob_values)
+
+# Fit the final Random Forest model with the best 'mtry' and evaluate variable importance
+rf_model <- randomForest(OverallFavCoffee ~ ., data = gactt_train,
+                         ntree = 1000, mtry = best_mtry, importance = TRUE)
+
+# Print and plot variable importance
+print(importance(rf_model, type = 2))
+print(varImpPlot(rf_model))
+
+# Calculate training error
+rf_predict <- predict(rf_model, newdata = train_data_feats)
+table(rf_predict, labels_train)
+terr_rf <- mean(rf_predict != labels_train)
+print(terr_rf)
+
+# Calculate testing error
+rf_predict_test <- predict(rf_model, newdata = gactt_test_model)
+table(rf_predict_test, labels_test)
+testerr_rf <- mean(rf_predict_test != labels_test)
+print(testerr_rf)
+
+
