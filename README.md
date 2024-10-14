@@ -34,45 +34,17 @@
 - [Coffee Beans Reviews by Coffee Quality Institute](https://www.kaggle.com/datasets/ankurchavda/coffee-beans-reviews-by-coffee-quality-institute) 
 
  
-<br />
-<br />
-Select the disk:  <br/>
-<img src="https://i.imgur.com/tcTyMUE.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
-Enter the number of passes: <br/>
-<img src="https://i.imgur.com/nCIbXbg.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
-Confirm your selection:  <br/>
-<img src="https://i.imgur.com/cdFHBiU.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
-Wait for process to complete (may take some time):  <br/>
-<img src="https://i.imgur.com/JL945Ga.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
-Sanitization complete:  <br/>
-<img src="https://i.imgur.com/K71yaM2.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-<br />
-<br />
-Observe the wiped disk:  <br/>
-<img src="https://i.imgur.com/AeZkvFQ.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
-</p>
-
 <h2>Visual Insights</h2>
 
-### [Project Presentation for Stakeholders](https://www.canva.com/design/DAGApdlVzAU/tG1TiQqygrWzrr42a8Sm9g/view?utm_content=DAGApdlVzAU&utm_campaign=designshare&utm_medium=link&utm_source=editor)
+### [Project Presentation for Gtech's ISYE 7406: Data Mining and Statistical Learning](https://www.canva.com/design/DAGApdlVzAU/tG1TiQqygrWzrr42a8Sm9g/view?utm_content=DAGApdlVzAU&utm_campaign=designshare&utm_medium=link&utm_source=editor)
 <br/>
-<img src="https://i.imgur.com/AeZkvFQ.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+<img src="https://i.imgur.com/ELT2Cth.png" height="80%" width="80%" alt="GACTT Presentation"/>
 </p>
 
  ### [YouTube live stream by coffee expert James Hoffmann and Cometeer](https://www.youtube.com/live/U489K2t_Tgc?si=CajoKH46J_UEba48)
  <br/>
-<img src="https://i.imgur.com/AeZkvFQ.png" height="80%" width="80%" alt="Disk Sanitization Steps"/>
+<img src="https://i.imgur.com/r32uaKj.jpeg" height="40%" width="40%" alt="Hoffmann Live Stream"/>
 </p>
-
-<iframe width="1280" height="720" src="https://www.youtube.com/embed/U489K2t_Tgc" title="The Great American Taste Test - Live Stream" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 <!--
  ```diff
