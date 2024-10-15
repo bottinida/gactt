@@ -101,7 +101,7 @@ convert_to_dummies <- function(data) {
   return(data)
 }
 
-# Apply conversion and remove redundant variable
+# Apply conversion and remove redundant variables
 final_merged <- convert_to_dummies(merged_focus)
 final_merged <- final_merged %>% select(-c("SpeciesRobusta"))
 
