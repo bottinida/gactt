@@ -26,7 +26,7 @@
     <span style="font-style: italic; color: gray;">Hoffmann and the GACTT kit</span>
 </p>
 
-<p>Adding more rigorous data sets to supplement the convenience sample data from Hoffmann and Cometeer was necessary to address potential biases. Therefore, we combined this data with one where the quality of different varieties of coffee is evaluated by highly trained individuals of the Coffee Quality Institute. This action allowed us to compare the perception of quality between experts and consumers of specialty coffee, offering a more complete and objective view of the coffee landscape. Both datasets are available for analysis on Kaggle.</p>
+<p>Adding more rigorous data sets to supplement the convenience sample data from Hoffmann and Cometeer was necessary to address potential biases. Therefore, I combined this data with one where the quality of different varieties of coffee is evaluated by highly trained individuals of the Coffee Quality Institute. This action allowed me to compare the perception of quality between experts and consumers of specialty coffee, offering a more complete and objective view of the coffee landscape. Both datasets are available for analysis on Kaggle.</p>
 
 <h2>Original Datasets</h2>
 
